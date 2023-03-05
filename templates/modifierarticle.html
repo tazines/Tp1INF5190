@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMS</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        h1{
+            color: rgb(255, 89, 101);
+            text-align: center;
+        }
+        header{
+            background-color: rgb(56,56,56);
+        }
+        .search-bar{
+            overflow: hidden;
+            background-color: rgb(56,56,56);
+        }
+        .search-bar input{
+            float: right;
+        }
+        .search-bar input[placeholder]{
+            color: rgb(255, 89, 101,0.5);
+        }
+        .search-bar button{
+            float: right;
+            width: 7%;
+            padding: 10px;
+            background: rgb(255, 89, 101);
+            color: rgb(56,56,56);
+            font-size: 17px;
+            border: 1px solid grey;
+        }
+    </style>
+
+</head>
+<body>
+    <header class="top">
+        <h1>CMS</h1>
+        <div class="search-bar">
+                <input class="align-self-center search-input form-control" id = "rechercheBar" placeholder="Que recherche tu?">
+                <button class="align-self-center" onclick="recherche()">Recherche!</button>
+        </div>
+    </header>
+    <h3>Titre: </h3>
+    <input type="text" id = "titre" class="form-control">
+    <h3> Paragraphe: </h3>
+    <textarea id = "paragraphe" class="form-control" ></textarea>
+    <button type="button" class="btn btn-warning" onclick="ecraserdonne()">Modifier article</button>
+
+
+</body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    axios.get('/getarticle/'+ window.location.href.split("/")[4])
+        .then(function (response) {
+            // handle success
+            let res = response.data
+            document.getElementById("titre").value = res.titre
+            document.getElementById("paragraphe").value = res.paragraphe
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          });
+    function ecraserdonne(){
+        axios.put('/ecraser',null,{params:{titre:document.getElementById("titre").value,
+            paragraphe:document.getElementById("paragraphe").value,
+            identifiant:window.location.href.split("/")[4]}})
+            .then(function (res){
+                alert("La modification a ete faite avec succee")
+            })
+            .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          });
+    }
+</script>
+</html>
